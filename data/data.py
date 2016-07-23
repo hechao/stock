@@ -5,6 +5,8 @@ import string
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+from html import HTML
+
 stock_data = {}
 
 import json
@@ -131,18 +133,55 @@ def bias_output(date, stock_arry, yr):
         else:
             output(date, 3, stock_arry[k][1], stock_arry[k][2], k, stock_arry[k][0], yr)
             
-def dump(stock_data):
+'''def dump(stock_data):
     data_string = json.dumps(stock_data)
     print "ENCODED:",data_string
     myfile = open(file_path, 'w')
     myfile.writelines(data_string)    
+    myfile.close()'''
+    
+def html(stock_data):
+    h = HTML()
+    h.p('STOCK!')
+    p = h.p
+    p.br
+    p.text('This is a stock test!')
+
+    t = h.table(border='2px', width ='100%')
+    t.th('name')
+    t.th('CID Code')
+    t.th('Lowest')
+    t.th('Highest')
+    t.th('Level')
+    t.th('Current')
+    t.th('Country')
+    t.th('Code')
+    t.th('Total Days')
+    
+    for k in stock_data:    
+        r = t.tr
+        r.td(k)
+        r.td(stock_data[k][0])
+        r.td(str(stock_data[k][1]))
+        r.td(str(stock_data[k][2]))
+        r.td(str(stock_data[k][3]))
+        r.td(str(stock_data[k][4]))
+        r.td(str(stock_data[k][5]))
+        r.td(str(stock_data[k][6]))
+        r.td(str(stock_data[k][7]))
+        
+                
+    print h
+    myfile = open(html_path, 'w')
+    myfile.writelines(h)    
     myfile.close()
 
 if __name__ == "__main__":
 
     yr = 2
+    html_path = '/srv/www/idehe.com/stock/index.html'
     file_path = '/srv/www/idehe.com/stock/json.json'
-    stocks_path = '/srv/www/idehe.com/stock/data/test.txt'
+    stocks_path = '/srv/www/idehe.com/stock/data/stock_hc.txt'
     
     date = get_date()
     
@@ -152,5 +191,6 @@ if __name__ == "__main__":
     #print stock_arry
     
     bias_output(date, custom_stocklist, yr)
-    dump(stock_data)
+    #dump(stock_data)
+    html(stock_data)
     
