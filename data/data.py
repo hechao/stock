@@ -127,8 +127,12 @@ def output(date, bias, cid, name, stock_id, zone, yr):
 def bias_output(date, stock_arry, yr):
 
     for k in stock_arry:
-        if stock_arry[k][0] == 'CN':
+        if stock_arry[k][0] == 'SHA':
             #for i in stock_arry.keys():
+            output(date, 1, stock_arry[k][1], stock_arry[k][2], k, stock_arry[k][0], yr)
+        elif stock_arry[k][0] == 'SHE':
+            output(date, 1, stock_arry[k][1], stock_arry[k][2], k, stock_arry[k][0], yr)
+        elif stock_arry[k][0] == 'CN/Topic':
             output(date, 1, stock_arry[k][1], stock_arry[k][2], k, stock_arry[k][0], yr)
         else:
             output(date, 3, stock_arry[k][1], stock_arry[k][2], k, stock_arry[k][0], yr)
@@ -140,40 +144,61 @@ def bias_output(date, stock_arry, yr):
     myfile.writelines(data_string)    
     myfile.close()'''
     
-def html(stock_data):
+def html(stock_data, date):
+    level_set = '15'
+    title = 'GET ALL STOCK!'
+    html_title = '<title>GET ALL STOCK!</title>'
     h = HTML()
-    h.p('STOCK!')
+    h.p(title)
     p = h.p
     p.br
-    p.text('This is a stock test!')
+    p.text('This is a stock test, get all the index value and see what is below %s %%' % level_set)
+    p.br
+    l = h.ol
+    l.li('Record time is: ' + date.strftime('%Y-%m-%d %H:%M:%S'), 'date update every half an hour')
+    l.li('Contact me if you have any suggestions, qq 2013986, email formblackt@gmail.com, or xueqiu hechao')
+    l.li('first table will be the world index, second table focuses on domestic index')
+    l.li('SHA is shanghai exchange, SHE is shenzhen exchange, AP is asia pacific, etc..')
 
-    t = h.table(border='2px', width ='100%')
+    t = h.table(border='2px', width ='70%', klass ='table table-bordered')
     t.th('name')
-    t.th('CID Code')
     t.th('Lowest')
     t.th('Highest')
     t.th('Level')
     t.th('Current')
     t.th('Country')
-    t.th('Code')
+    t.th('Code', '   (CID Code)')
     t.th('Total Days')
     
-    for k in stock_data:    
-        r = t.tr
-        r.td(k)
-        r.td(stock_data[k][0])
-        r.td(str(stock_data[k][1]))
-        r.td(str(stock_data[k][2]))
-        r.td(str(stock_data[k][3]))
-        r.td(str(stock_data[k][4]))
-        r.td(str(stock_data[k][5]))
-        r.td(str(stock_data[k][6]))
-        r.td(str(stock_data[k][7]))
-        
-                
+    group = ['SHA', 'SHE', 'CN/Topic', 'AP', 'AMERICAS', 'US/Topic', 'EU']
+    for x in group:   
+        for k in stock_data:
+            if stock_data[k][5] == x:
+                r = t.tr
+                r.td(k)
+                if float(stock_data[k][3][:-1]) <= int(level_set):
+                    r.td.b("***" + str(stock_data[k][3]))
+                else:
+                    r.td(str(stock_data[k][3]))
+                r.td(str(stock_data[k][1]))
+                r.td(str(stock_data[k][2]))
+                r.td(str(stock_data[k][4]))
+                r.td(str(stock_data[k][5]))
+                r.td(str(stock_data[k][6]), '   (', stock_data[k][0], ')')
+                r.td(str(stock_data[k][7]))
+ 
     print h
     myfile = open(html_path, 'w')
-    myfile.writelines(h)    
+    myfile.write
+    head_list = ['<!DOCTYPE html>','<html>','<head>', html_title, '<meta http-equiv="content-type" content="text/html; charset=UTF-8" />'
+    '<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">',
+    '<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>',
+    '<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>',
+    '</head>', '<body>']
+    end_list = ['</body>', '</html>']
+    myfile.writelines(head_list) 
+    myfile.writelines(h)
+    myfile.writelines(end_list)
     myfile.close()
 
 if __name__ == "__main__":
@@ -192,5 +217,5 @@ if __name__ == "__main__":
     
     bias_output(date, custom_stocklist, yr)
     #dump(stock_data)
-    html(stock_data)
+    html(stock_data, date)
     
