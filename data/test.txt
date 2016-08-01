@@ -1,3 +1,4 @@
-1-HSI-CN-13414271-恒生指數: HANG SENG INDEX
-
-1-SHA:000001-CN-7521596-上证综合指数: SSE Composite Index
+1-HSI-SHA-13414271-恒生指數: HANG SENG INDEX-
+1-SHA:000001-SHA-7521596-上证综合指数: SSE Composite Index-
+1-SHA:000012-SHA-2597133-国债指数: SSE Government Bond Index-
+1-SHA:000013-SHA-12480918-企债指数: SSE Corporate Bond Index-
